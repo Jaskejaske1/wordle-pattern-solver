@@ -4,10 +4,10 @@ A cross-platform utility application built with [Flet](https://flet.dev/) (Pytho
 
 ## Features
 
-* **Solver Logic:** Filters the word dictionary in real-time based on user input (Green/Yellow/Grey).
-* **NYT Integration:** Automatically pulls the daily solution from the NYT API.
-* **Performance:** Search operations run in background threads to maintain UI responsiveness.
-* **Responsive Layout:** optimized for both Desktop (Landscape) and Mobile (Portrait).
+* Filters the word dictionary in real-time based on user input (Green/Yellow/Grey).
+* Automatically pulls the daily solution from the NYT API.
+* Search operations run in background threads to maintain UI responsiveness.
+* Optimized for both Desktop (Landscape) and Mobile (Portrait).
 
 ## Development
 
