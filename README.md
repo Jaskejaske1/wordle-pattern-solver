@@ -1,61 +1,54 @@
-# WordlePatternSolver app
+# Wordle Pattern Solver
 
-## Run the app
+A cross-platform utility application built with [Flet](https://flet.dev/) (Python) to assist in solving Wordle puzzles. The app filters valid 5-letter words based on position and character constraints and attempts to fetch the daily NYT solution automatically.
 
-### uv
+## Features
+
+* **Solver Logic:** Filters the word dictionary in real-time based on user input (Green/Yellow/Grey).
+* **NYT Integration:** Automatically pulls the daily solution from the NYT API.
+* **Performance:** Search operations run in background threads to maintain UI responsiveness.
+* **Responsive Layout:** optimized for both Desktop (Landscape) and Mobile (Portrait).
+
+## Development
+
+This project uses `uv` for dependency management.
+
+### Run locally
 
 Run as a desktop app:
 
-```
+```bash
 uv run flet run
+
 ```
 
 Run as a web app:
 
-```
+```bash
 uv run flet run --web
+
 ```
 
-For more details on running the app, refer to the [Getting Started Guide](https://docs.flet.dev/).
-
-## Build the app
+## Build
 
 ### Android
 
-```
-flet build apk -v
-```
+Builds are split per ABI to optimize file size (arm64, armeabi-v7a, x86_64).
 
-For more details on building and signing `.apk` or `.aab`, refer to the [Android Packaging Guide](https://docs.flet.dev/publish/android/).
-
-### iOS
+```bash
+flet build apk --clear-cache --org "com.jaske.wordle_pattern_solver" --product "Wordle Pattern Solver" --split-per-abi
 
 ```
-flet build ipa -v
-```
-
-For more details on building and signing `.ipa`, refer to the [iOS Packaging Guide](https://docs.flet.dev/publish/ios/).
-
-### macOS
-
-```
-flet build macos -v
-```
-
-For more details on building macOS package, refer to the [macOS Packaging Guide](https://docs.flet.dev/publish/macos/).
-
-### Linux
-
-```
-flet build linux -v
-```
-
-For more details on building Linux package, refer to the [Linux Packaging Guide](https://docs.flet.dev/publish/linux/).
 
 ### Windows
 
-```
-flet build windows -v
+Builds a standalone executable directory.
+
+```bash
+flet build windows --clear-cache --org "com.jaske.wordle_pattern_solver" --product "Wordle Pattern Solver"
+
 ```
 
-For more details on building Windows package, refer to the [Windows Packaging Guide](https://docs.flet.dev/publish/windows/).
+### Other Platforms
+
+For details on building for iOS, macOS, or Linux, refer to the [Flet Packaging Guide](https://docs.flet.dev/publish/).
