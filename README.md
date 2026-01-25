@@ -6,7 +6,7 @@ A cross-platform utility application to assist in solving Wordle puzzles. The ap
 
 ### v2: Flutter
 Located in `wordle_pattern_solver/`.
-This is the new, fully native version built with Flutter. It offers better performance, native look and feel, and smaller build sizes.
+This is the new, more native version built with Flutter. It offers better performance, native look and feel, and smaller build sizes.
 
 #### Features
 * Solver Logic: Real-time filtering.
