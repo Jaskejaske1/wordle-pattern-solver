@@ -1,0 +1,20 @@
+{
+    "files.exclude": {
+        "v1_python_flet": true,
+        "v1_flet": true
+    },
+    "search.exclude": {
+        "v1_python_flet": true,
+        "v1_flet": true
+    },
+    "files.watcherExclude": {
+        "v1_python_flet/**": true,
+        "v1_flet/**": true
+    },
+    "python.analysis.exclude": [
+        "v1_python_flet",
+        "v1_flet",
+        "v1_python_flet/**",
+        "v1_flet/**"
+    ]
+}
