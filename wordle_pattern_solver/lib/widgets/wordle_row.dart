@@ -99,7 +99,7 @@ class WordleRowWidget extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.autorenew,
-                        size: 20,
+                        size: 24,
                         color: rowState.matches.isNotEmpty
                             ? Colors.blue[400]
                             : Colors.grey[800],
@@ -110,7 +110,7 @@ class WordleRowWidget extends StatelessWidget {
                             ? "${rowState.currentMatchIndex + 1}/${rowState.matches.length}"
                             : "0",
                         style: TextStyle(
-                          fontSize: 10,
+                          fontSize: 12,
                           fontWeight: FontWeight.bold,
                           color: rowState.matches.isNotEmpty
                               ? Colors.grey[400]
