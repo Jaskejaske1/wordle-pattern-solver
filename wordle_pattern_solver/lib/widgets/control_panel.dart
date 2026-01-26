@@ -97,8 +97,11 @@ class _ControlPanelState extends State<ControlPanel> {
               ),
             ),
             const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            Wrap(
+              alignment: WrapAlignment.center,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 8,
+              runSpacing: 4,
               children: [
                 const Text("Strict Mode"),
                 Switch(
@@ -106,14 +109,12 @@ class _ControlPanelState extends State<ControlPanel> {
                   activeColor: Colors.green,
                   onChanged: (val) => appState.toggleStrictMode(val),
                 ),
-                const SizedBox(width: 10),
                 IconButton(
                   icon: const Icon(Icons.delete_outline),
                   color: Colors.red[400],
                   tooltip: "Reset Grid",
                   onPressed: () {
                     appState.resetGrid();
-                    // Optional: also clear text if desired? No, text stays usually.
                   },
                 ),
               ],

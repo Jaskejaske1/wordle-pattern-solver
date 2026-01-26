@@ -20,10 +20,12 @@ class WordleRowWidget extends StatelessWidget {
     }
 
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 3),
+      // Match vertical margin to horizontal margin (2 * 2 = 4) for consistent grid look
+      margin: const EdgeInsets.symmetric(vertical: 2),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Tiles section - flexible, takes up remaining space
+          // Tiles section - expanded to fill space
           Expanded(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -54,7 +56,7 @@ class WordleRowWidget extends StatelessWidget {
                       onTap: () => appState.updateTile(index, tileIndex),
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 150),
-                        margin: EdgeInsets.symmetric(horizontal: 2),
+                        margin: const EdgeInsets.symmetric(horizontal: 2),
                         alignment: Alignment.center,
                         decoration: BoxDecoration(color: color, border: border),
                         child: FittedBox(
@@ -80,59 +82,46 @@ class WordleRowWidget extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           // Controls - fixed width
+          // Controls - fixed width, single button
           SizedBox(
-            width: 80,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back, size: 18),
-                      color: rowState.matches.isNotEmpty
-                          ? Colors.blue[400]
-                          : Colors.grey[800],
-                      onPressed: rowState.matches.isNotEmpty
-                          ? () => appState.previousSuggestion(index)
-                          : null,
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(
-                        minWidth: 28,
-                        minHeight: 28,
+            width: 50,
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(8),
+                onTap: rowState.matches.isNotEmpty
+                    ? () => appState.nextSuggestion(index)
+                    : null,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.autorenew,
+                        size: 20,
+                        color: rowState.matches.isNotEmpty
+                            ? Colors.blue[400]
+                            : Colors.grey[800],
                       ),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.arrow_forward, size: 18),
-                      color: rowState.matches.isNotEmpty
-                          ? Colors.blue[400]
-                          : Colors.grey[800],
-                      onPressed: rowState.matches.isNotEmpty
-                          ? () => appState.nextSuggestion(index)
-                          : null,
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(
-                        minWidth: 28,
-                        minHeight: 28,
+                      const SizedBox(height: 2),
+                      Text(
+                        rowState.matches.isNotEmpty
+                            ? "${rowState.currentMatchIndex + 1}/${rowState.matches.length}"
+                            : "0",
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: rowState.matches.isNotEmpty
+                              ? Colors.grey[400]
+                              : Colors.grey[800],
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                    ),
-                  ],
-                ),
-                Text(
-                  rowState.matches.isNotEmpty
-                      ? "${rowState.currentMatchIndex + 1}/${rowState.matches.length}"
-                      : "0",
-                  style: TextStyle(
-                    fontSize: 9,
-                    color: rowState.matches.isNotEmpty
-                        ? Colors.grey[500]
-                        : Colors.red[400],
+                    ],
                   ),
-                  textAlign: TextAlign.center,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
                 ),
-              ],
+              ),
             ),
           ),
         ],

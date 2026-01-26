@@ -73,13 +73,24 @@ class HomePage extends StatelessWidget {
 
   Widget _buildGrid() {
     return Center(
-      child: Container(
-        constraints: const BoxConstraints(maxWidth: 400),
-        child: ListView.builder(
-          shrinkWrap: true,
-          padding: const EdgeInsets.all(20),
-          itemCount: 6,
-          itemBuilder: (context, index) => WordleRowWidget(index: index),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 600),
+        child: FittedBox(
+          fit: BoxFit.contain,
+          child: SizedBox(
+            width: 500,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: List.generate(
+                  6,
+                  (index) => WordleRowWidget(index: index),
+                ),
+              ),
+            ),
+          ),
         ),
       ),
     );
