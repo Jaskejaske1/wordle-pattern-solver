@@ -9,10 +9,12 @@ Located in `wordle_pattern_solver/`.
 This is the new, more native version built with Flutter. It offers better performance, native look and feel, and smaller build sizes.
 
 #### Features
-* Solver Logic: Real-time filtering.
-* NYT Integration: Fetches daily solution.
-* Native & Web: Runs on Windows, Android, iOS, and Web.
-* Responsive: Optimized for all screen sizes.
+* **Solver Logic**: Real-time filtering of possible words.
+* **Daily Solution**: Fetches today's NYT solution (spoiler warning included).
+* **Pattern Saving**: Save and load your favorite or difficult game states.
+* **Cross-Platform**: Windows, Android, iOS, Web.
+* **Responsive**: Optimized for Mobile (Portrait) and Desktop (Landscape).
+
 
 #### Running
 ```bash

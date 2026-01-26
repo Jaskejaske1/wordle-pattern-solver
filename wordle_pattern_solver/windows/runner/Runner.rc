@@ -89,11 +89,11 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.jaske.wordle" "\0"
+            VALUE "CompanyName", "be.jaspersavels.wordle" "\0"
             VALUE "FileDescription", "wordle_pattern_solver" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "wordle_pattern_solver" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2026 com.jaske.wordle. All rights reserved." "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2026 be.jaspersavels.wordle. All rights reserved." "\0"
             VALUE "OriginalFilename", "wordle_pattern_solver.exe" "\0"
             VALUE "ProductName", "wordle_pattern_solver" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
