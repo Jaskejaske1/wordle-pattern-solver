@@ -4,8 +4,12 @@ import 'package:provider/provider.dart';
 import 'package:wordle_pattern_solver/main.dart'; // Adjust path if needed
 import 'package:wordle_pattern_solver/providers/app_state.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 void main() {
   testGoldens('Grid layout responsive verification', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+
     // Define the devices we want to test on
     final builder = DeviceBuilder()
       ..overrideDevicesForAllScenarios(

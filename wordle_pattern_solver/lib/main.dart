@@ -59,8 +59,9 @@ class HomePage extends StatelessWidget {
               children: [
                 const SafeArea(
                   bottom: false,
-                  child: SizedBox(height: 250, child: ControlPanel()),
+                  child: SizedBox(height: 290, child: ControlPanel()),
                 ),
+
                 const Divider(height: 1, color: Colors.white10),
                 Expanded(child: _buildGrid()),
               ],

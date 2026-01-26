@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import '../logic/solve_logic.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../models/saved_pattern.dart';
 
 class WordleRowState {
   List<int> states = List.filled(5, 0); // 0: Grey, 1: Yellow, 2: Green
@@ -18,6 +20,7 @@ class AppState extends ChangeNotifier {
   String targetWord = "LOADING...";
   bool isStrictMode = false;
   List<WordleRowState> rows = List.generate(6, (_) => WordleRowState());
+  List<SavedPattern> savedPatterns = [];
 
   String statusText = "Starting...";
 
@@ -32,6 +35,7 @@ class AppState extends ChangeNotifier {
     // wordList = await getWordList();
     // Optimization: Load words but don't set target yet
     wordList = await getWordList();
+    await _loadSavedPatterns(); // Load patterns from disk
     targetWord = "";
 
     statusText = "${wordList.length} words loaded.";
@@ -193,5 +197,68 @@ class AppState extends ChangeNotifier {
       if (a[i] != b[i]) return false;
     }
     return true;
+  }
+
+  // --- Persistence ---
+
+  Future<void> _loadSavedPatterns() async {
+    final prefs = await SharedPreferences.getInstance();
+    final List<String>? stored = prefs.getStringList('saved_patterns');
+    if (stored != null) {
+      savedPatterns = stored.map((s) => SavedPattern.fromJson(s)).toList();
+      // Sort by newest first
+      savedPatterns.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+      notifyListeners();
+    }
+  }
+
+  Future<void> saveCurrentPattern(String name) async {
+    final pattern = SavedPattern(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      name: name,
+      targetWord: targetWord,
+      rowStates: rows.map((r) => List<int>.from(r.states)).toList(),
+      timestamp: DateTime.now(),
+    );
+
+    savedPatterns.insert(0, pattern);
+    notifyListeners();
+    await _persistPatterns();
+  }
+
+  Future<void> deletePattern(String id) async {
+    savedPatterns.removeWhere((p) => p.id == id);
+    notifyListeners();
+    await _persistPatterns();
+  }
+
+  void loadPattern(SavedPattern pattern) {
+    targetWord = pattern.targetWord;
+    _controllerText = pattern
+        .targetWord; // We need to sync this to UI controller if possible, or just set it
+    validateTarget();
+
+    // Restore rows
+    for (int i = 0; i < 6; i++) {
+      if (i < pattern.rowStates.length) {
+        rows[i].states = List.from(pattern.rowStates[i]);
+      } else {
+        rows[i].reset();
+      }
+    }
+    solveAllRows();
+    notifyListeners();
+  }
+
+  // Hack to sync textfield?
+  // Ideally, control panel listens to this or we use a controller stored in state (not recommended).
+  // We will let the ControlPanel update itself by checking state.
+  String _controllerText = "";
+  String get controllerText => _controllerText;
+
+  Future<void> _persistPatterns() async {
+    final prefs = await SharedPreferences.getInstance();
+    final List<String> encoded = savedPatterns.map((p) => p.toJson()).toList();
+    await prefs.setStringList('saved_patterns', encoded);
   }
 }

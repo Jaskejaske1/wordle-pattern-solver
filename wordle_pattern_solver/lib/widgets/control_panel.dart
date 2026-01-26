@@ -29,22 +29,30 @@ class _ControlPanelState extends State<ControlPanel> {
     final appState = context.watch<AppState>();
 
     // Sync controller only if external change (like initial load)
-    if (_controller.text.toUpperCase() != appState.targetWord &&
-        appState.targetWord != "LOADING...") {
-      // Avoid resetting while user is typing effectively by checking focus or just simple diff?
-      // For now, only if empty allows initial load.
-      // Or if length differs (likely external reset).
-      // Better logic: if the user isn't currently editing?
-      // Simple heuristic: if state differs and controller is empty, fill it.
-      // If state is significantly different (e.g. from "loading" to "word"), fill it.
-      if (_controller.text.isEmpty) {
-        _controller.text = appState.targetWord;
+    if (_controller.text.toUpperCase() != appState.targetWord) {
+      // Check if we are loading (length differs or currently empty)
+      // Or explicit "LOADING..." state
+      if (appState.targetWord != "LOADING...") {
+        // Force update controller to match state (e.g. after Load Pattern)
+        // To avoid cursor jumping we might want to check focus,
+        // but for this app it's acceptable as load is an explicit action.
+        final val = appState.targetWord;
+        _controller.value = _controller.value.copyWith(
+          text: val,
+          selection: TextSelection.collapsed(offset: val.length),
+          composing: TextRange.empty,
+        );
       }
     }
 
+    final isMobile = MediaQuery.of(context).size.width < 700;
+
     return Container(
       color: Colors.grey[900],
-      padding: const EdgeInsets.all(20),
+      padding: isMobile
+          ? const EdgeInsets.symmetric(horizontal: 12, vertical: 4)
+          : const EdgeInsets.all(20),
+
       alignment: Alignment.center,
       child: SingleChildScrollView(
         child: Column(
@@ -100,38 +108,19 @@ class _ControlPanelState extends State<ControlPanel> {
             Wrap(
               alignment: WrapAlignment.center,
               crossAxisAlignment: WrapCrossAlignment.center,
-              spacing: 8,
+              spacing: isMobile ? 8 : 12,
               runSpacing: 4,
               children: [
-                const Text("Strict Mode"),
-                Switch(
-                  value: appState.isStrictMode,
-                  activeThumbColor: Colors.green,
-                  onChanged: (val) => appState.toggleStrictMode(val),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.help_outline),
-                  tooltip: "How to use",
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: const Text("How to Use"),
-                        content: const Text(
-                          "1. Enter a Target Word manually OR load today's solution.\n"
-                          "2. Tap tiles in the grid to set their colors (Grey/Yellow/Green) matching your game state.\n"
-                          "3. The app will calculate all possible words that fit that pattern.\n"
-                          "4. Use the Cycle button to view suggestions.",
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(context),
-                            child: const Text("Got it"),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text("Strict Mode"),
+                    Switch(
+                      value: appState.isStrictMode,
+                      activeThumbColor: Colors.green,
+                      onChanged: (val) => appState.toggleStrictMode(val),
+                    ),
+                  ],
                 ),
                 TextButton.icon(
                   onPressed: () {
@@ -170,6 +159,30 @@ class _ControlPanelState extends State<ControlPanel> {
                   style: TextButton.styleFrom(foregroundColor: Colors.orange),
                 ),
                 IconButton(
+                  icon: const Icon(Icons.help_outline),
+                  tooltip: "How to use",
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text("How to Use"),
+                        content: const Text(
+                          "1. Enter a Target Word manually OR load today's solution.\n"
+                          "2. Tap tiles in the grid to set their colors matching your game state.\n"
+                          "3. The app will calculate all possible words that fit that pattern.\n"
+                          "4. Use the Cycle button to view suggestions.",
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text("Got it"),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+                IconButton(
                   icon: const Icon(Icons.delete_outline),
                   color: Colors.red[400],
                   tooltip: "Reset Grid",
@@ -180,9 +193,130 @@ class _ControlPanelState extends State<ControlPanel> {
               ],
             ),
             const SizedBox(height: 10),
+            Wrap(
+              alignment: WrapAlignment.center,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: isMobile ? 8 : 20,
+              runSpacing: 4,
+              children: [
+                OutlinedButton.icon(
+                  onPressed: () => _showSaveDialog(context, appState),
+                  icon: const Icon(Icons.save_alt, size: 18),
+                  label: const Text("Save pattern"),
+                ),
+                OutlinedButton.icon(
+                  onPressed: () => _showSavedPatterns(context, appState),
+                  icon: const Icon(Icons.bookmarks_outlined, size: 18),
+                  label: const Text("My patterns"),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 10),
             Text(
               appState.statusText,
               style: TextStyle(color: Colors.grey[600], fontSize: 12),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showSaveDialog(BuildContext context, AppState appState) {
+    final nameController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Save Pattern"),
+        content: TextField(
+          controller: nameController,
+          decoration: const InputDecoration(hintText: "Pattern Name"),
+          autofocus: true,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancel"),
+          ),
+          TextButton(
+            onPressed: () {
+              if (nameController.text.isNotEmpty) {
+                appState.saveCurrentPattern(nameController.text);
+                Navigator.pop(context);
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(const SnackBar(content: Text("Pattern saved!")));
+              }
+            },
+            child: const Text("Save"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showSavedPatterns(BuildContext context, AppState appState) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            const Text(
+              "Saved Patterns",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            Expanded(
+              child: Consumer<AppState>(
+                builder: (context, state, _) {
+                  if (state.savedPatterns.isEmpty) {
+                    return const Center(
+                      child: Text(
+                        "No saved patterns yet.",
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    );
+                  }
+                  return ListView.builder(
+                    itemCount: state.savedPatterns.length,
+                    itemBuilder: (context, index) {
+                      final pattern = state.savedPatterns[index];
+                      return Card(
+                        color: Colors.grey[850],
+                        margin: const EdgeInsets.symmetric(vertical: 4),
+                        child: ListTile(
+                          title: Text(
+                            pattern.name,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          subtitle: Text(
+                            "Target: ${pattern.targetWord} • ${pattern.timestamp.toString().substring(0, 10)}",
+                            style: TextStyle(color: Colors.grey[400]),
+                          ),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.delete, color: Colors.red),
+                            onPressed: () => state.deletePattern(pattern.id),
+                          ),
+                          onTap: () {
+                            state.loadPattern(pattern);
+                            Navigator.pop(context);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("Loaded '${pattern.name}'"),
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
             ),
           ],
         ),
