@@ -106,8 +106,68 @@ class _ControlPanelState extends State<ControlPanel> {
                 const Text("Strict Mode"),
                 Switch(
                   value: appState.isStrictMode,
-                  activeColor: Colors.green,
+                  activeThumbColor: Colors.green,
                   onChanged: (val) => appState.toggleStrictMode(val),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.help_outline),
+                  tooltip: "How to use",
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text("How to Use"),
+                        content: const Text(
+                          "1. Enter a Target Word manually OR load today's solution.\n"
+                          "2. Tap tiles in the grid to set their colors (Grey/Yellow/Green) matching your game state.\n"
+                          "3. The app will calculate all possible words that fit that pattern.\n"
+                          "4. Use the Cycle button to view suggestions.",
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text("Got it"),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+                TextButton.icon(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text("Spoiler Warning"),
+                        content: const Text(
+                          "Are you sure you want to load today's Wordle solution? This will spoil the answer for you!",
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text("Cancel"),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              Navigator.pop(context);
+                              final solution = await appState
+                                  .loadDailySolution();
+                              if (context.mounted && solution != null) {
+                                _controller.text = solution;
+                              }
+                            },
+                            child: const Text(
+                              "I'm Ready",
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.calendar_today, size: 16),
+                  label: const Text("Daily"),
+                  style: TextButton.styleFrom(foregroundColor: Colors.orange),
                 ),
                 IconButton(
                   icon: const Icon(Icons.delete_outline),

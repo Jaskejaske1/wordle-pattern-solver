@@ -94,32 +94,54 @@ class WordleRowWidget extends StatelessWidget {
                     : null,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.autorenew,
-                        size: 24,
-                        color: rowState.matches.isNotEmpty
-                            ? Colors.blue[400]
-                            : Colors.grey[800],
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        rowState.matches.isNotEmpty
-                            ? "${rowState.currentMatchIndex + 1}/${rowState.matches.length}"
-                            : "0",
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: rowState.matches.isNotEmpty
-                              ? Colors.grey[400]
-                              : Colors.grey[800],
+                  child:
+                      rowState.matches.isEmpty && appState.targetWord.isNotEmpty
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.error_outline,
+                              size: 24,
+                              color: Colors.red[400],
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              "NONE",
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.red[400],
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        )
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.autorenew,
+                              size: 24,
+                              color: rowState.matches.isNotEmpty
+                                  ? Colors.blue[400]
+                                  : Colors.grey[800],
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              rowState.matches.isNotEmpty
+                                  ? "${rowState.currentMatchIndex + 1}/${rowState.matches.length}"
+                                  : "0",
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: rowState.matches.isNotEmpty
+                                    ? Colors.grey[400]
+                                    : Colors.grey[800],
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
                         ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
                 ),
               ),
             ),

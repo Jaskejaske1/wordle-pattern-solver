@@ -29,14 +29,31 @@ class AppState extends ChangeNotifier {
     statusText = "Downloading...";
     notifyListeners();
 
+    // wordList = await getWordList();
+    // Optimization: Load words but don't set target yet
     wordList = await getWordList();
-    var solution = await getTodaysSolution();
+    targetWord = "";
 
-    // Set target word
-    setTargetWord(solution);
-
-    statusText = "${wordList.length} words.";
+    statusText = "${wordList.length} words loaded.";
     notifyListeners();
+  }
+
+  Future<String?> loadDailySolution() async {
+    statusText = "Fetching daily solution...";
+    notifyListeners();
+
+    try {
+      var solution = await getTodaysSolution();
+      setTargetWord(solution);
+      statusText = "Solution loaded!";
+      notifyListeners();
+      return solution;
+    } catch (e) {
+      statusText = "Failed to load solution.";
+      debugPrint(e.toString());
+      notifyListeners();
+      return null;
+    }
   }
 
   void setTargetWord(String word) {
