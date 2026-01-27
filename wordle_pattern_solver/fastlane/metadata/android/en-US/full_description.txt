@@ -1,16 +1,14 @@
 A utility to help you create Wordle pattern art.
-
+<br><br>
 Unlike a standard solver, this app lets you:
-1. Set a "Target Word" (the answer).
-2. Enter "Guess Words" on the grid.
-3. See exactly what colors would result.
-
+<br>1. Set a "Target Word" (the answer).
+<br>2. Enter "Guess Words" on the grid.
+<br>3. See exactly what colors would result.
+<br><br>
 This allows you to engineer specific patterns (like a checkerboard or shape) to share with friends.
-
+<br><br>
 Features:
-* Visualise how guesses look against a target word
-* Fetches today's NYT answer to test patterns against it
-* Save your favorite designs/patterns
-* Works great on phones and tablets
-
-Completely free and open source. No ads, no tracking.
+<br>• <b>Pattern Simulator</b>: Visualise how guesses look against a target
+<br>• <b>Daily Solution</b>: Fetches today's NYT answer to test patterns against it
+<br>• <b>Saved Patterns</b>: Save your favorite designs/patterns
+<br>• <b>No Ads, No Tracking</b>d open source. No ads, no tracking.
