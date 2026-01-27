@@ -1,0 +1,10 @@
+A powerful, cross-platform utility to help you solve Wordle reasoning puzzles.
+
+Features:
+* **Solver Logic**: Enter your guesses and colors to filter the remaining possible words.
+* **Daily Solution**: Fetches today's NYT solution (with spoiler protection).
+* **Pattern Saving**: Save difficult game states to analyze later.
+* **Smart Filtering**: Supports Green (Correct), Yellow (Wrong Position), and Grey (Absent) constraints.
+* **Responsive Design**: Works great on both Phones and Tablets.
+
+Completely free and open source. No ads, no tracking.

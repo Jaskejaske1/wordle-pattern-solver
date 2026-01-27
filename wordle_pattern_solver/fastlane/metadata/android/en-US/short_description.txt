@@ -1,0 +1,1 @@
+Solve Wordle puzzles by managing patterns and filtering words.
